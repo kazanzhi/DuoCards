@@ -1,0 +1,23 @@
+.pink {
+    background-color: #FCECF1;
+}
+
+.brown {
+    background-color: #FFF8DC;
+}
+
+#dark {
+    background-color: #0F1418;
+}
+
+.light {
+    background-color: #F3F9FF;
+}
+
+#dark .common {
+    background-color: #0D0D0D;
+}
+
+#dark .char {
+    color: #0D0D0D;
+}
