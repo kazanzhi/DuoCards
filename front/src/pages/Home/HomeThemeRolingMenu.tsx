@@ -7,7 +7,7 @@ interface Props {
 }
 type ThemeContextType = any
 
-export const ThemeRolMenu = ({ showTheme }: Props) => {
+export const ThemeRolingMenu = ({ showTheme }: Props) => {
 
     const { setTheme } = useContext<ThemeContextType | null>(ThemeContext)
 

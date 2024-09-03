@@ -1,4 +1,4 @@
-export interface CardData {
+export interface Card {
     id: number
     imgUrl: string
     engWord: string

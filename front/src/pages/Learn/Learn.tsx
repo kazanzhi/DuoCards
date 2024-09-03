@@ -1,6 +1,5 @@
 import { Button, Col, Container, Row } from "react-bootstrap";
-import '../style.css'
-import { DraggedObject } from "../components/DraggedObject/DraggedObject";
+import { LearnCard } from "./LearnCard";
 
 
 export function Learn() {
@@ -26,7 +25,7 @@ export function Learn() {
                         </svg>
                     </Button>
                 </Col>
-                <DraggedObject />
+                <LearnCard />
             </Row>
         </Container >
     );

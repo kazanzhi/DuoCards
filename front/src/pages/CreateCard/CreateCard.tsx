@@ -4,7 +4,7 @@ interface Props {
 
 }
 
-export const Card = (props: Props) => {
+export const CreateCard = (props: Props) => {
 
 
     return (

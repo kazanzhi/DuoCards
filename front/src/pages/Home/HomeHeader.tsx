@@ -1,16 +1,14 @@
 import { useState } from 'react'
 import { Navbar as NavbarBs, Container, Button, Image } from 'react-bootstrap'
-import { ThemeRolMenu } from './ThemeRolMenu'
-import { StatisticRolMenu } from './StatisticRolMenu'
+import { ThemeRolingMenu } from './HomeThemeRolingMenu'
+import ukImage from '../../assets/images/uk.png'
 
 
-export const Navbar = () => {
+export const HomeHeader = () => {
 
     const [showTheme, setShowTheme] = useState<boolean>(false)
-    const [showStat, setShowStat] = useState<boolean>(false)
 
     const handleTheme = () => setShowTheme(!showTheme)
-    const handleStat = () => setShowStat(!showStat)
 
 
     return (
@@ -29,8 +27,8 @@ export const Navbar = () => {
                             />
                         </svg>
                     </Button>
-                    <Image src='/imgs/uk.png' style={{ width: "30px", margin: '0 8rem' }} />
-                    <Button onClick={handleStat} variant='outline-light' className='rounded-circle' style={{ width: "3rem", height: "3rem", margin: '0 8rem' }}>
+                    <Image src={ukImage} style={{ width: "30px", margin: '0 8rem' }} />
+                    <Button variant='outline-light' className='rounded-circle' style={{ width: "3rem", height: "3rem", margin: '0 8rem' }}>
                         <svg xmlns="http://www.w3.org/2000/svg" height="24" width="21" viewBox="0 0 448 512">
                             <path fill="#B197FC" d="M160 80c0-26.5 21.5-48 48-48h32c26.5 0 48 21.5 
                                 48 48V432c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V80zM0 272c0-26.5 
@@ -42,8 +40,7 @@ export const Navbar = () => {
                     </Button>
                 </Container>
             </NavbarBs >
-            <ThemeRolMenu showTheme={showTheme} />
-            <StatisticRolMenu showStat={showStat} />
+            <ThemeRolingMenu showTheme={showTheme} />
         </>
     )
 }

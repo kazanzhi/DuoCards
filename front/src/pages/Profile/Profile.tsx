@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Container, Image } from "react-bootstrap";
+import { Card } from "../../models/Card";
 
 
 const initialCards = [
@@ -10,7 +11,7 @@ const initialCards = [
 
 export const Profile = () => {
   const [cards, setCards] = useState(initialCards);
-  const [stackIndex, setStackIndex] = useState(initialCards.length - 1); // Индекс верхней карточки в стеке
+  const [stackIndex, setStackIndex] = useState<number>(initialCards.length - 1); // Индекс верхней карточки в стеке
 
   const handleCardClick = (index : any) => {
     if(index === stackIndex)
