@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Button, Image } from "react-bootstrap"
-import './DraggedObject.css'
+import './LearnCard.css'
 
 type Direction = "left" | "right" | null;
 
-export function DraggedObject() {
+export function LearnCard() {
 
     const initialCards = [
         { id: 1, engWord: 'box', ruWord: 'коробка', imgUrl: 'https://www.celladorales.com/wp-content/uploads/2016/12/ShippingBox_sq.jpg' },
@@ -13,17 +13,17 @@ export function DraggedObject() {
     ];
 
     const [cards, setCards] = useState(initialCards.map(card => ({ ...card, counter: 0 })))
-    const [topCardIndex, setTopCardIndex] = useState(cards.length - 1);
+    const [topCardIndex, setTopCardIndex] = useState<number>(cards.length - 1);
     const [isDragging, setIsDragging] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
     const [offset, setOffset] = useState({ x: 0, y: 0 });
     const [turnOver, setTurnOver] = useState<boolean[]>(initialCards.map(() => false));
     const [direction, setDirection] = useState<Direction>(null);
-    const [left, setLeft] = useState(false)
-    const [right, setRight] = useState(false)
-    const [isAnimating, setIsAnimating] = useState(false);
-    const [click, setClick] = useState(false)
+    const [left, setLeft] = useState<boolean>(false)
+    const [right, setRight] = useState<boolean>(false)
+    const [isAnimating, setIsAnimating] = useState<boolean>(false);
+    const [click, setClick] = useState<boolean>(false)
 
 
     useEffect(() => {

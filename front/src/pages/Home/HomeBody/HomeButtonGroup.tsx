@@ -1,12 +1,12 @@
 import { Button, Col, Row, Modal } from "react-bootstrap";
-import buttonsData from "../../data/items.json"
+import buttonsData from "../../../data/cards.json"
 import { useState } from "react";
 
-interface Props {
+type Props = {
 
 }
 
-export function ButtonGroup(props: Props) {
+export function HomeButtonGroup(props: Props) {
     const [showModal, setShowModal] = useState<boolean[]>(buttonsData.map(() => false))
 
     const handleShow = (index: number) => {
