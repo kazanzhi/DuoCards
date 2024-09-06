@@ -2,7 +2,7 @@ import { Container, Button } from 'react-bootstrap';
 
 export const HomeFooter = () => {
     return (
-        <footer style={{ borderTop: '1px solid #182026', height: '60px', display: 'flex', alignItems: 'center'}}>
+        <footer style={{ borderTop: '2px solid #E2EDF9', display: 'flex'}}>
             <Container className='d-flex justify-content-center'>
                 <Button href='/' variant='outline-light' className='rounded-circle' style={{ width: "3rem", height: "3rem", margin: '0 8rem' }}>
                     <svg xmlns="http://www.w3.org/2000/svg" height="25" width="25" viewBox="0 0 576 512">
