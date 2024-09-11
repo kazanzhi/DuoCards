@@ -26,11 +26,15 @@ export function HomeButtonGroup(props: Props) {
             {buttonsData.map((button) => {
                 return (
                     <Col key={button.id} style={{ width: "250px", display: 'flex', justifyContent: 'center' }}>
-                        <Button variant="light" style={{
-                            color: button.color,
-                            width: "100%",
-                            height: "70px"
-                        }} onClick={() => handleShow(button.id)} className="no-focus-outline border common learn" >
+                        <Button
+                            className="no-focus-outline border common learn"
+                            variant="light"
+                            style={{
+                                color: button.color,
+                                width: "100%",
+                                height: "70px"
+                            }}
+                            onClick={() => handleShow(button.id)}  >
                             <h5>{button.words}</h5>
                             <span>{button.meaning}</span>
                             <svg style={{ borderRadius: '80%', border: "1px solid", margin: "4px" }} xmlns="http://www.w3.org/2000/svg" height="0.8rem" width="0.8rem" viewBox="0 0 320 512">

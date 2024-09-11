@@ -4,6 +4,7 @@ import { Profile } from "../pages/Profile/Profile";
 import { Home } from "../pages/Home/Home";
 import { CreateCard } from "../pages/CreateCard/CreateCard";
 import { Learn } from "../pages/Learn/Learn";
+import LoginSignup from "../pages/LoginSignup/LoginSignup";
 
 export const router = createBrowserRouter([
     {
@@ -13,7 +14,9 @@ export const router = createBrowserRouter([
             { path: '/', element: <Home /> },
             { path: 'profile', element: <Profile /> },
             { path: 'card', element: <CreateCard /> },
-            { path: 'learn', element: <Learn /> }
+            { path: 'learn', element: <Learn /> },
+            { path: 'login', element: <LoginSignup /> },
+            { path: 'signup', element: <LoginSignup /> }
             // path: '*'
         ]
     }
