@@ -1,13 +1,14 @@
 import { useContext } from 'react'
-import { Button, Col, Container, Row } from 'react-bootstrap'
+import { Button, Col, Container, Offcanvas, Row } from 'react-bootstrap'
 import { ThemeContext } from '../../App'
 
 interface Props {
-    showTheme: boolean
+    showTheme: boolean,
+    setShowTheme: React.Dispatch<React.SetStateAction<boolean>>
 }
 type ThemeContextType = any
 
-export const ThemeRolingMenu = ({ showTheme }: Props) => {
+export const ThemeRolingMenu = ({ showTheme, setShowTheme }: Props) => {
 
     const { setTheme } = useContext<ThemeContextType | null>(ThemeContext)
 
@@ -32,10 +33,10 @@ export const ThemeRolingMenu = ({ showTheme }: Props) => {
     return (
         <>
             {showTheme !== null &&
-                <Container className='d-flex flex-column align-items-center shadow-sm common' fluid style={{
+                <Offcanvas show={showTheme} placement='top' onHide={() => setShowTheme(!showTheme)} className='d-flex flex-column align-items-center shadow-sm common' fluid style={{
                     padding: "0", position: 'absolute', width: '100%', height: '120px',
                     transform: showTheme ? 'translateY(0)' : 'translateY(-120px)',
-                    transition: '0.3s ease',
+                    transition: '0.3s ease'
                 }} >
                     <Row>
                         <Col style={{ margin: '15px 2px' }}>
@@ -88,12 +89,8 @@ export const ThemeRolingMenu = ({ showTheme }: Props) => {
                             <p>use the theme you like</p>
                         </Col>
                     </Row>
-                </Container>
+                </Offcanvas>
             }
         </>
     )
 }
-/*
-background: rgba(0, 0, 0, 0.133);
-backdrop-filter: blur(2px);
-*/

@@ -8,6 +8,7 @@ interface ThemeContextType {
   setTheme: (theme: string) => void;
 }
 
+
 export const ThemeContext = createContext<ThemeContextType | null>(null)
 
 function App() {

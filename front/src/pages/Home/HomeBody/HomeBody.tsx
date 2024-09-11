@@ -7,10 +7,12 @@ import elephantImage from '../../../assets/images/elephant.png'
 export const HomeBody = () => {
 
     return (
-        <body style={{ flex: 1, backgroundColor: '#F3F9FF' }}>
-            <Container className="d-flex flex-column align-items-center" >
-                <Row className="mt-4">
-                    <HomeButtonGroup />
+        <main>
+            <Container fluid style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '30px 0px' }} >
+                <Row>
+                    <Col>
+                        <HomeButtonGroup />
+                    </Col>
                 </Row>
                 <Row>
                     <Col>
@@ -33,6 +35,6 @@ export const HomeBody = () => {
                     </Col>
                 </Row>
             </Container>
-        </body >
+        </main >
     )
 }
