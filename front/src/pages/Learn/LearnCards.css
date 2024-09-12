@@ -30,7 +30,7 @@
     }
 
     50% {
-        transform: translateX(-400px);
+        transform: translateX(-700px);
     }
 
     100% {
@@ -44,7 +44,7 @@
     }
 
     50% {
-        transform: translateX(400px);
+        transform: translateX(700px);
     }
 
     100% {
