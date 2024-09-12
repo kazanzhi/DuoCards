@@ -12,7 +12,7 @@ export function Home() {
       <Container fluid style={{ backgroundColor: '#F3F9FF', flex: 1 }}>
         <HomeBody />
       </Container>
-      <HomeFooter />
+      {/* <HomeFooter /> */}
     </div>
   )
 }

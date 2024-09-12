@@ -2,8 +2,6 @@ import { useState } from 'react'
 import { Container, Button, Image, Row, Col, Dropdown } from 'react-bootstrap'
 import { ThemeRolingMenu } from './HomeThemeRolingMenu'
 import ukImage from '../../assets/images/uk.png'
-import './HomeHeader.css'
-
 
 export const HomeHeader = () => {
 
@@ -20,12 +18,12 @@ export const HomeHeader = () => {
     }
 
     return (
-        <header className='shadow-sm' style={{ borderBottom: '1px solid #E2EDF5', height: '62px', display: 'flex' }}>
+        <header className='shadow-sm' style={{ borderBottom: '1px solid #E2EDF5', height: '75px', display: 'flex' }}>
             <Container fluid style={{ display: 'flex', justifyContent: 'center' }}>
-                <Row className='custom-row'>
-                    <Col sm={4} md={4} style={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
-                        <Button onClick={handleTheme} variant='outline-light' className="rounded-circle" style={{ width: "3rem", height: "3rem", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 512 512">
+                <Row style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                    <Col sm={4} md={4} xl={2} style={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
+                        <Button onClick={handleTheme} variant='outline-light' style={{ width: "60px", height: "60px", display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: '50%' }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" style={{ height: '40px', width: '40px' }} viewBox="0 0 512 512">
                                 <path fill="#B197FC" d="M512 256c0 .9 0 1.8 0 2.7c-.4 36.5-33.6 61.3-70.1 
                                 61.3H344c-26.5 0-48 21.5-48 48c0 3.4 .4 6.7 1 9.9c2.1 10.2 6.5 20 
                                 10.8 29.9c6.1 13.8 12.1 27.5 12.1 42c0 31.8-21.6 60.7-53.4 62c-3.5
@@ -37,10 +35,10 @@ export const HomeHeader = () => {
                             </svg>
                         </Button>
                     </Col>
-                    <Col sm={4} md={4} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Col sm={4} md={4} xl={2} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <Image src={ukImage} style={{ width: '45px', height: '25px' }} />
                     </Col>
-                    <Col sm={4} md={4} style={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
+                    <Col sm={4} md={4} xl={2} style={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
                         {/* Statistic 
                         <Button variant='outline-light' className='rounded-circle' style={{ width: "3rem", height: "3rem" }}>
                             <svg xmlns="http://www.w3.org/2000/svg" height="24" width="21" viewBox="0 0 448 512">
@@ -52,8 +50,8 @@ export const HomeHeader = () => {
                                 />
                             </svg>
                         </Button> */}
-                        <Button href='login' variant="outline-light" className='rounded-circle' style={{ height: '3rem', width: '3rem', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height='30' width='30'>
+                        <Button href='/login' variant="outline-light" style={{ borderRadius: '50%', height: '60px', width: '60px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={{ width: '40px', height: '40px' }}>
                                 <path fill='#B197FC' d="M352 96l64 0c17.7 0 32 14.3 32 32l0 256c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0c53 0 96-43 96-96l0-256c0-53-43-96-96-96l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32zm-9.4 182.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L242.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128z" />
                             </svg>
                         </Button>

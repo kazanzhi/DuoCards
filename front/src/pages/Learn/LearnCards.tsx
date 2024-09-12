@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Container, Card, Row, Col } from 'react-bootstrap'
 import './LearnCards.css'
 import SwipeInstructions from './SwipeInstructions'
@@ -19,7 +19,7 @@ export const LearnCards = (props: Props) => {
     const [xMoveLeft, setXMoveLeft] = useState<boolean[]>(cards.map(() => false))
     const [xMoveRight, setXMoveRight] = useState<boolean[]>(cards.map(() => false))
     const [learnCounter, setLearnCounter] = useState<number[]>(cards.map(() => 0))
-    const [tempCard, setTempCard] = useState<any>()
+    const [zIndexes, setZIndexes] = useState<number[]>(cards.map((_, index) => index));
 
     const handleFlip = (index: number) => {
         if (isFlipped[index]) {
@@ -61,24 +61,75 @@ export const LearnCards = (props: Props) => {
         if (isFlipped[index]) {
             if (event.key === 'ArrowLeft') {
                 setXMoveLeft(prevState => {
+                    const newState = [...prevState];
+                    newState[index] = true;
+                    return newState;
+                });
+                setIsFlipped(prevState => {
+                    const newFlipped = [...prevState];
+                    newFlipped[index] = false; // Сбрасываем состояние переворота для карточки
+                    return newFlipped;
+                });
+
+                setTimeout(() => {
+                    setZIndexes(prevState => {
+                        const newZIndex = [...prevState];
+                        newZIndex[index] = -1;  // Устанавливаем низкий z-index для текущей карточки
+                        return newZIndex;
+                    });
+                }, 250); 
+
+                setTimeout(() => {
+                    setCards(prevCards => {
+                        const newCards = prevCards.filter(currentCard => currentCard.id !== id); // Удаляем карточку из массива
+                        newCards.unshift({ ...card, flipped: false });
+                        return newCards;
+                    });
+                    setXMoveLeft(prevState => {
+                        const newState = [...prevState];
+                        newState[index] = false;
+                        return newState;
+                    });
+                }, 500);
+            } else if (event.key === 'ArrowRight') {
+                setLearnCounter(prevState => {
                     const newState = [...prevState]
-                    newState[index] = !newState[index]
+                    newState[id] = newState[id] + 1
                     return newState
                 })
-                setTimeout(() => {
-                    setTempCard(card)
-                    setCards(prevCards => prevCards.filter(currentCad => currentCad.id !== id))
-                    cards.unshift(tempCard)
-                }, 700)
-            } else if (event.key === 'ArrowRight') {
                 setXMoveRight(prevState => {
                     const newState = [...prevState]
                     newState[index] = !newState[index]
                     return newState
                 })
+                setIsFlipped(prevState => {
+                    const newFlipped = [...prevState];
+                    newFlipped[index] = false; // Сбрасываем состояние переворота для карточки
+                    return newFlipped;
+                });
+
                 setTimeout(() => {
-                    setCards(prevCards => prevCards.filter(currentCad => currentCad.id !== id))
-                }, 700)
+                    setZIndexes(prevState => {
+                        const newZIndex = [...prevState];
+                        newZIndex[index] = 0;  // Установить zIndex в 0 после задержки
+                        return newZIndex;
+                    });
+                }, 250); // 250 миллисекунд задержки
+
+                setTimeout(() => {
+                    setCards(prevCards => {
+                        const newCards = prevCards.filter(currentCard => currentCard.id !== id); // Удаляем карточку из массива
+                        if (learnCounter[id] < 3)
+                            newCards.unshift({ ...card, flipped: false });
+
+                        return newCards;
+                    });
+                    setXMoveRight(prevState => {
+                        const newState = [...prevState];
+                        newState[index] = false;
+                        return newState;
+                    });
+                }, 500);
             }
         }
     }
@@ -104,7 +155,7 @@ export const LearnCards = (props: Props) => {
                         tabIndex={0}
                         onClick={() => handleFlip(index)}
                         onKeyDown={(event) => handleKeyDown(event, index, card.id, card)}
-                        className={`${isShaking[index] ? 'shake' : ''} ${xMoveLeft[index] ? 'moving-object' : ''} ${xMoveRight[index] ? 'moving-right' : ''}`} // Применяем класс тряски
+                        className={`card-container ${isShaking[index] ? 'shake' : ''} ${xMoveLeft[index] ? 'moving-object' : ''} ${xMoveRight[index] ? 'moving-right' : ''}`} // Применяем класс тряски
                         style={{
                             width: '100%',
                             height: '100%',
@@ -120,27 +171,31 @@ export const LearnCards = (props: Props) => {
                                         : 'none',  // for all cards
                             boxShadow: '0 0px 8px rgba(0, 0, 0, 0.1)', // пофиксить тень для всех карточке
                             borderRadius: '20px',
-                            outline: 'none'
+                            outline: 'none',
+                            zIndex: zIndexes[index] ? 0 : index
                         }}>
 
                         {/* Front Side */}
-                        <Card.Body style={{
-                            position: 'absolute',
-                            width: '100%',
-                            height: '100%',
-                            backfaceVisibility: 'hidden',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                        }}
+                        <Card.Body
+                            className="card-front"
+                            style={{
+                                position: 'absolute',
+                                width: '100%',
+                                height: '100%',
+                                backfaceVisibility: 'hidden',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexDirection: 'column',
+                            }}
                         >
-                            <Card.Img style={{ height: '40%', width: '40%', objectFit: 'contain', pointerEvents: 'none', overflow: 'hidden' }} src={card.imgUrl} alt={card.ruWord} />
-                            <Card.Text style={{ fontSize: '25px' }}>{card.ruWord}</Card.Text>
+                            <Card.Img style={{ height: '45%', width: '50%', objectFit: 'contain', pointerEvents: 'none', overflow: 'hidden' }} src={card.imgUrl} alt={card.ruWord} />
+                            <Card.Text style={{ fontSize: '30px' }}>{card.ruWord}</Card.Text>
                         </Card.Body>
 
                         {/* Back Side */}
                         <Card.Body
+                            className="card-back"
                             style={{
                                 position: 'absolute',
                                 width: '100%',
@@ -154,20 +209,20 @@ export const LearnCards = (props: Props) => {
                             }}
                         >
                             <Card.Img
-                                style={{ height: '40%', width: '40%', objectFit: 'contain', pointerEvents: 'none', overflow: 'hidden' }}
+                                style={{ height: '45%', width: '50%', objectFit: 'contain', pointerEvents: 'none', overflow: 'hidden' }}
                                 src={card.imgUrl}
                                 alt={card.engWord}
                             />
                             <Row>
                                 <Col style={{ display: 'flex', justifyContent: 'center' }}>
-                                    <Button onClick={() => handleTriangleClick(card.engWord)} variant="outline-light" className="rounded-circle">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height='19' width='15' fill="#BBDDFF" viewBox="0 0 384 512">
+                                    <Button onClick={() => handleTriangleClick(card.engWord)} variant="outline-light" style={{ borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" style={{ height: '30px' }} fill="#BBDDFF" viewBox="0 0 384 512">
                                             <path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 
                                                 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"
                                             />
                                         </svg>
                                     </Button>
-                                    <Card.Text style={{ fontSize: '25px' }}>{card.engWord}</Card.Text>
+                                    <Card.Text style={{ fontSize: '30px' }}>{card.engWord}</Card.Text>
                                 </Col>
                             </Row>
                         </Card.Body>
