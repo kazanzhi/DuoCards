@@ -22,7 +22,7 @@ export const HomeBody = () => {
                         <Button href='/learn' style={{ boxShadow: '0 4px 6px rgba(0, 0, 0, 0.4)', borderRadius: "30px", fontWeight: 'bold', fontSize: '26px', alignItems: "center", display: 'flex', justifyContent: 'center' }}>Start</Button>
                     </Col>
                     <Col sm={3} md={1} xl={1}>
-                        <Button href='/card' style={{ height: "53px", width: "53px", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.4)", borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Button href='/create' style={{ height: "53px", width: "53px", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.4)", borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                                 <path fill="white" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 
                                 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 

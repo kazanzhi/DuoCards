@@ -1,0 +1,23 @@
+[
+    { 
+        "id": 0, 
+        "meaning": "To learn", 
+        "color": "green", 
+        "title": "Spaced-repetition algorithm", 
+        "content": "We tracks every single one of your cards and knows when it is the right time to show it to you again. He knows which cards you sent to the right so he will show them to you again after a longer period of time. If you sent a card to the left, he will show it to you sooner."
+    },
+    { 
+        "id": 1, 
+        "meaning": "Known", 
+        "color": "#1E90FF", 
+        "title": "Short-term memory", 
+        "content": "This number means how many words and phrases you have in your short-term memory." 
+    },
+    { 
+        "id": 2, 
+        "meaning": "Learned", 
+        "color": "#DAA520", 
+        "title": "Long-term memory", 
+        "content": "This number means how many words and phrases you have in your long-term memory. We know which cards you already remember well. He will show them to you again occasionally, just to make sure you don't forget them ever."
+    }
+]

@@ -1,12 +1,17 @@
 import { Button, Col, Row, Modal, Container } from "react-bootstrap";
-import buttonsData from "../../../data/cards.json"
-import { useState } from "react";
+import buttonsData from "../../../data/buttonsData.json"
+import { useContext, useState } from "react";
+import { CardsContext } from "../../../App";
 
 type Props = {
 
 }
 
 export function HomeButtonGroup(props: Props) {
+    const cardsContext = useContext(CardsContext)
+
+    const { learnCards, knownCards, learnedCards } = cardsContext || { learnCards: [], knownCards: [], learnedCards: [] }
+
     const [showModal, setShowModal] = useState<boolean[]>(buttonsData.map(() => false))
 
     const handleShow = (index: number) => {
@@ -21,8 +26,19 @@ export function HomeButtonGroup(props: Props) {
         setShowModal(newShowModal);
     }
 
+    const getCardsCount = (id: number) => {
+        switch(id){
+            case 0: 
+                return learnCards.length;
+            case 1:
+                return knownCards.length;
+            case 2: 
+                return learnedCards.length
+        }
+    }
+
     return (
-        <Container style={{marginTop: '20px'}}>
+        <Container style={{ marginTop: '20px' }}>
             <Row style={{ display: 'flex', justifyContent: 'center' }}>
                 {buttonsData.map((button) => {
                     return (
@@ -42,7 +58,7 @@ export function HomeButtonGroup(props: Props) {
                                     boxShadow: '0 0px 8px rgba(0, 0, 0, 0.1)'
                                 }}
                                 onClick={() => handleShow(button.id)}  >
-                                <h3>{button.words}</h3>
+                                <h3>{getCardsCount(button.id)}</h3>
                                 <div>
                                     <span style={{ fontSize: '26px' }}>{button.meaning}</span>
                                     <svg style={{ border: "1px solid", height: '25px', width: '25px', borderRadius: '50%', margin: '0px 0px 5px 5px' }} xmlns="http://www.w3.org/2000/svg" height="0.8rem" width="0.8rem" viewBox="0 0 320 512">
@@ -57,8 +73,8 @@ export function HomeButtonGroup(props: Props) {
 
                             <Modal show={showModal[button.id]} onHide={() => handleClose(button.id)} centered aria-labelledby="contained-modal-title-vcenter">
                                 <Modal.Body style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px', marginRight: '10px', marginLeft: '10px' }}>
-                                    <h2 className="mb-3" style={{fontSize: '34px'}}>{button.title}</h2>
-                                    <p className="mb-5" style={{fontSize: '24px'}}>{button.content}</p>
+                                    <h2 className="mb-3" style={{ fontSize: '34px' }}>{button.title}</h2>
+                                    <p className="mb-5" style={{ fontSize: '24px' }}>{button.content}</p>
                                     <Button variant="outline-light" className="rounded-circle position-absolute" onClick={() => handleClose(button.id)} style={{ right: "-10px", top: "-20px" }}>
                                         <svg height={31} width={20} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
                                             <path fill="#B197FC" d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 
@@ -79,25 +95,3 @@ export function HomeButtonGroup(props: Props) {
         </Container >
     )
 }
-
-/*
-
-
-<ModalBs show={showModal[button.id]} onHide={() => handleClose(button.id)} centered aria-labelledby="contained-modal-title-vcenter">
-    <ModalBs.Body className="d-flex flex-column align-items-center" style={{ marginTop: '20px', marginRight: '10px', marginLeft: '10px' }}>
-        <h2 className="mb-3">{button.title}</h2>
-        <p className="mb-5">{button.content}</p>
-        <Button variant="outline-light" className="rounded-circle position-absolute" onClick={() => handleClose(button.id)} style={{ right: "-10px", top: "-20px" }}>
-            <svg height={31} width={20} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-                <path fill="#B197FC" d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 
-                                0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 
-                                45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 
-                                45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 
-                                0-45.3L237.3 256 342.6 150.6z"
-                />
-            </svg>
-        </Button>
-    </ModalBs.Body>
-</ModalBs>
-
-*/
