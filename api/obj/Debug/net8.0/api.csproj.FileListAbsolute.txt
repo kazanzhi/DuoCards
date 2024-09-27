@@ -150,3 +150,10 @@ D:\IT\DuoCards\api\bin\Debug\net8.0\Hangfire.AspNetCore.dll
 D:\IT\DuoCards\api\bin\Debug\net8.0\Hangfire.Core.dll
 D:\IT\DuoCards\api\bin\Debug\net8.0\Hangfire.NetCore.dll
 D:\IT\DuoCards\api\bin\Debug\net8.0\Hangfire.SqlServer.dll
+D:\IT\DuoCards\api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\IT\DuoCards\api\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+D:\IT\DuoCards\api\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+D:\IT\DuoCards\api\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+D:\IT\DuoCards\api\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
+D:\IT\DuoCards\api\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
+D:\IT\DuoCards\api\bin\Debug\net8.0\Microsoft.Extensions.Options.dll

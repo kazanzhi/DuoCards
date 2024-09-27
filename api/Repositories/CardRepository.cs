@@ -15,10 +15,10 @@ namespace api.Repositories
         public CardRepository(DataContext context, TranslationService translateService)
         {
             _translationService = translateService;
-           _context = context;
+            _context = context;
         }
 
-        public async Task<Card> CreateCard(CardDto cardDto)
+        public async Task<Card> CreateCard(CardDto cardDto, string userId)  //done
         {
             var createdCard = new Card
             {
@@ -26,24 +26,34 @@ namespace api.Repositories
                 RuWord = cardDto.RuWord,
                 ExampleOfUsage = cardDto.ExampleOfUsage,
                 ImgUrl = "https://i.natgeofe.com/k/6496b566-0510-4e92-84e8-7a0cf04aa505/red-fox-portrait.jpg?w=1084.125&h=721.875",
-                CardStatus = Enum.CardStatus.ToLeaern,
+                CardStatus = Enum.CardStatus.Learn,
                 SuccessfulAttempts = 0,
                 ReviewCount = 0,
-                NextReviewDate = DateTime.UtcNow
+                NextReviewDate = DateTime.UtcNow,
+                AppUserId = userId
             };
+
             _context.Cards.Add(createdCard);
             await _context.SaveChangesAsync();
 
             return createdCard;
         }
-        public async Task<List<Card>> GetAllCards()
+    
+        public async Task<List<Card>> GetAllCards(string userId)    //done
         {
-            var cards = await _context.Cards.ToListAsync();
+            var cards = await _context.Cards
+                .Where(c => c.AppUserId == userId)
+                .ToListAsync();
+
             return cards;
         }
-        public async Task<bool> UpdateCard(CardDto cardDto, int id)
+
+        public async Task<bool> UpdateCard(CardDto cardDto, int id, string userId)  //done
         {
-            var updatedCard = await _context.Cards.FindAsync(id);
+            var updatedCard = await _context.Cards
+                .Where(c => c.Id == id && c.AppUserId == userId)
+                .FirstOrDefaultAsync();
+            
             if(updatedCard != null)
             {
                 updatedCard.EngWord = cardDto.EngWord;
@@ -56,42 +66,23 @@ namespace api.Repositories
 
             return false;
         }
-        public async Task<bool> UpdateCardAsync(Card card)
-        {
-            _context.Cards.Update(card);
-            return await _context.SaveChangesAsync() > 0;
-        }
 
-        public async Task<bool> CorrectAnswer(int id)
+        public async Task<Card> GetById(int id, string userId)  //done
         {
-            var card = await _context.Cards.FindAsync(id);
+            var card = await _context.Cards
+                .Where(c => c.Id == id && c.AppUserId == userId)
+                .FirstOrDefaultAsync();
+
             if (card == null)
-                return false;
-
-            return await _context.SaveChangesAsync() > 0;
-        }
-        public async Task<bool> IncorrectAnswer(int id)
-        {
-            var card = await _context.Cards.FindAsync(id);
-            if (card == null)
-                return false;
-
-            return await _context.SaveChangesAsync() > 0;
-        }
-
-        public async Task<string> TranslateWord(string word)
-        {
-            var translatedWord = await _translationService.Translate(word);
-            return translatedWord;
-        }
-
-        public async Task<Card> GetById(int id)
-        {
-            var card = await _context.Cards.FindAsync(id);
-            if(card == null)
                 return null;
 
             return card;
+        }
+
+        public async Task<string> TranslateWord(string word)    //done
+        {
+            var translatedWord = await _translationService.Translate(word);
+            return translatedWord;
         }
     }
 }

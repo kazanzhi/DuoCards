@@ -2,7 +2,7 @@
 {
     public enum CardStatus
     {
-        ToLeaern,
+        Learn,
         Known,
         Learned
     }

@@ -6,35 +6,35 @@ namespace api.Services
 {
     public class CardManagementService : ICardManagementService
     {
-        private readonly ICardRepository _cardRepository;
+        private readonly ICardManagementRepository _cardManagementRepository;
 
-        public CardManagementService(ICardRepository cardRepository)
+        public CardManagementService(ICardManagementRepository cardManagementRepository)
         {
-            _cardRepository = cardRepository;
+            _cardManagementRepository = cardManagementRepository;
         }
-        public async Task<bool> HandleCorrectAnswer(int cardId)
+        public async Task<bool> HandleCorrectAnswer(int cardId, string userId)
         {
-            var card = await _cardRepository.GetById(cardId);
+            var card = await _cardManagementRepository.GetUserCard(cardId, userId);
 
             if(card != null)
             {
                 card.SuccessfulAttempts++;
 
-                if (card.SuccessfulAttempts >= 2 && card.CardStatus == CardStatus.ToLeaern)
+                if (card.SuccessfulAttempts >= 2 && card.CardStatus == CardStatus.Learn)
                 {
-                    MoveToKnown(card);
+                    PromoteToKnownStatus(card);
                 }
 
                 await CheckCardStatus(card);
 
-                return await _cardRepository.UpdateCardAsync(card);
+                return await _cardManagementRepository.UpdateCard(card, userId);
             }
             return false;
         }
 
-        public async Task<bool> HandleIncorrectAnswer(int cardId)
+        public async Task<bool> HandleIncorrectAnswer(int cardId, string userId)
         {
-            var card = await _cardRepository.GetById(cardId);
+            var card = await _cardManagementRepository.GetUserCard(cardId, userId);
             if(card != null)
             {
                 if (card.SuccessfulAttempts > 0)
@@ -43,7 +43,7 @@ namespace api.Services
                 }
 
                 await CheckCardStatus(card);
-                return await _cardRepository.UpdateCardAsync(card);
+                return await _cardManagementRepository.UpdateCard(card, userId);
             }
 
             return false;
@@ -51,12 +51,12 @@ namespace api.Services
 
         public async Task CheckAllCardsStatus()
         {
-            var allCards = await _cardRepository.GetAllCards();
+            var allCards = await _cardManagementRepository.GetAllCards();
 
             foreach (var card in allCards)
             {
                 await CheckCardStatus(card);
-                await _cardRepository.UpdateCardAsync(card);
+                await _cardManagementRepository.UpdateCard(card, card.AppUserId);
             }
         }
 
@@ -66,37 +66,46 @@ namespace api.Services
             {
                 if (card.ReviewCount >= 3)
                 {
-                    MoveToLearned(card);
+                    PromoteToLearnedStatus(card);
                 }
                 else
                 {
-                    ResetToToLearn(card);
+                    PromoteToLearnStatus(card);
                 }
             }
             else if (card.CardStatus == CardStatus.Learned && DateTime.Now >= card.NextReviewDate)
             {
-                ResetToToLearn(card);
+                ResetToLearnStatus(card);
             }
         }
-        private void MoveToKnown(Card card)
+
+        private void PromoteToKnownStatus(Card card)
         {
             card.CardStatus = CardStatus.Known;
-            card.ReviewCount++;
             card.SuccessfulAttempts = 0;
-            card.NextReviewDate = DateTime.Now.AddHours(6);
+            card.NextReviewDate = DateTime.Now.AddMinutes(1);
+            card.ReviewCount++;
         }
 
-        private void MoveToLearned(Card card)
+        private void PromoteToLearnedStatus(Card card)
         {
             card.CardStatus = CardStatus.Learned;
-            card.NextReviewDate = DateTime.Now.AddHours(24);
+            card.NextReviewDate = DateTime.Now.AddMinutes(1);
+            card.SuccessfulAttempts = 0;
+            card.ReviewCount = 0;
         }
 
-        private void ResetToToLearn(Card card)
+        private void PromoteToLearnStatus(Card card)
         {
-            card.CardStatus = CardStatus.ToLeaern;
-            card.ReviewCount = 0;
+            card.CardStatus = CardStatus.Learn;
             card.SuccessfulAttempts = 0;
+        }
+
+        private void ResetToLearnStatus(Card card)
+        {
+            card.CardStatus = CardStatus.Learn;
+            card.SuccessfulAttempts = 0;
+            card.ReviewCount = 0;
         }
     }
 }
