@@ -1,4 +1,5 @@
 ﻿using api.Enum;
+using System.Text.Json.Serialization;
 
 namespace api.Models
 {
@@ -13,5 +14,9 @@ namespace api.Models
         public int SuccessfulAttempts { get; set; } //count of correct answers
         public int ReviewCount { get; set; } //count of times when card was in known
         public DateTime NextReviewDate { get; set; } //the card was last reviewed
+        public string AppUserId { get; set; }
+
+        [JsonIgnore]
+        public AppUser AppUser { get; set; }
     }
 }

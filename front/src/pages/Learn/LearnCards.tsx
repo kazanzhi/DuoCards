@@ -169,7 +169,7 @@ export const LearnCards: React.FC<Props> = ({ cards, setCards, setCardId }) => {
                                     : cards.length > 4 && index === 2
                                         ? 'rotate(-4deg)'  // turn cards if index 2 and cards.length more than 5
                                         : 'none',  // for all cards
-                            boxShadow: '0 0px 8px rgba(0, 0, 0, 0.1)', // пофиксить тень для всех карточке
+                            //boxShadow: '0 0px 8px rgba(0, 0, 0, 0.1)', // пофиксить тень для всех карточке
                             borderRadius: '20px',
                             outline: 'none',
                             zIndex: zIndexes[index] ? 0 : index
