@@ -4,6 +4,7 @@ import './LearnCards.css'
 import SwipeInstructions from './SwipeInstructions'
 import { cardService } from '../../services/cardService'
 import { Card } from '../../types/Card'
+import { spawn } from 'child_process'
 
 interface Props {
     cards: Card[],
@@ -149,170 +150,95 @@ export const LearnCards: React.FC<Props> = ({ cards, setCards, setCardId }) => {
                     <SwipeInstructions />
                 }
 
-                {cards.map((card, index) =>
-                    <CardReact
-                        key={card.id}
-                        tabIndex={0}
-                        onClick={() => handleFlip(index)}
-                        onKeyDown={(event) => handleKeyDown(event, index, card.id, card)}
-                        className={`card-container ${isShaking[index] ? 'shake' : ''} ${xMoveLeft[index] ? 'moving-object' : ''} ${xMoveRight[index] ? 'moving-right' : ''}`} // Применяем класс тряски
-                        style={{
-                            width: '100%',
-                            height: '100%',
-                            position: 'absolute',
-                            transformStyle: 'preserve-3d',
-                            transition: 'transform 1s',
-                            transform: isFlipped[index]
-                                ? 'rotateY(180deg)'
-                                : cards.length > 4 && index === 3
-                                    ? 'rotate(4deg)'  // turn cards if index 3 and cards.length more than 5
-                                    : cards.length > 4 && index === 2
-                                        ? 'rotate(-4deg)'  // turn cards if index 2 and cards.length more than 5
-                                        : 'none',  // for all cards
-                            //boxShadow: '0 0px 8px rgba(0, 0, 0, 0.1)', // пофиксить тень для всех карточке
-                            borderRadius: '20px',
-                            outline: 'none',
-                            zIndex: zIndexes[index] ? 0 : index
-                        }}>
 
-                        {/* Front Side */}
-                        <CardReact.Body
-                            className="card-front"
-                            style={{
-                                position: 'absolute',
-                                width: '100%',
-                                height: '100%',
-                                backfaceVisibility: 'hidden',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                flexDirection: 'column',
-                            }}
-                        >
-                            <CardReact.Img style={{ height: '45%', width: '50%', objectFit: 'contain', pointerEvents: 'none', overflow: 'hidden' }} src={card.imgUrl} alt={card.ruWord} />
-                            <CardReact.Text style={{ fontSize: '30px' }}>{card.ruWord}</CardReact.Text>
-                        </CardReact.Body>
+                {
+                    cards.length != 0 ?
+                        cards.map((card, index) =>
+                            <CardReact
+                                key={card.id}
+                                tabIndex={0}
+                                onClick={() => handleFlip(index)}
+                                onKeyDown={(event) => handleKeyDown(event, index, card.id, card)}
+                                className={`card-container ${isShaking[index] ? 'shake' : ''} ${xMoveLeft[index] ? 'moving-object' : ''} ${xMoveRight[index] ? 'moving-right' : ''}`} // Применяем класс тряски
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    position: 'absolute',
+                                    transformStyle: 'preserve-3d',
+                                    transition: 'transform 1s',
+                                    transform: isFlipped[index]
+                                        ? 'rotateY(180deg)'
+                                        : cards.length > 4 && index === 3
+                                            ? 'rotate(4deg)'  // turn cards if index 3 and cards.length more than 5
+                                            : cards.length > 4 && index === 2
+                                                ? 'rotate(-4deg)'  // turn cards if index 2 and cards.length more than 5
+                                                : 'none',  // for all cards
+                                    //boxShadow: '0 0px 8px rgba(0, 0, 0, 0.1)', // пофиксить тень для всех карточке
+                                    borderRadius: '20px',
+                                    outline: 'none',
+                                    zIndex: zIndexes[index] ? 0 : index
+                                }}>
 
-                        {/* Back Side */}
-                        <CardReact.Body
-                            className="card-back"
-                            style={{
-                                position: 'absolute',
-                                width: '100%',
-                                height: '100%',
-                                backfaceVisibility: 'hidden',
-                                transform: 'rotateY(180deg)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                flexDirection: 'column'
-                            }}
-                        >
-                            <CardReact.Img
-                                style={{ height: '45%', width: '50%', objectFit: 'contain', pointerEvents: 'none', overflow: 'hidden' }}
-                                src={card.imgUrl}
-                                alt={card.engWord}
-                            />
-                            <Row>
-                                <Col style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-                                    <div style={{ display: 'flex' }}>
-                                        <Button onClick={() => handleTriangleClick(card.engWord)} variant="outline-light" style={{ borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" style={{ height: '30px' }} fill="#BBDDFF" viewBox="0 0 384 512">
-                                                <path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 
+                                {/* Front Side */}
+                                <CardReact.Body
+                                    className="card-front"
+                                    style={{
+                                        position: 'absolute',
+                                        width: '100%',
+                                        height: '100%',
+                                        backfaceVisibility: 'hidden',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        flexDirection: 'column',
+                                    }}
+                                >
+                                    <CardReact.Img style={{ height: '45%', width: '50%', objectFit: 'contain', pointerEvents: 'none', overflow: 'hidden' }} src={card.imgUrl} alt={card.ruWord} />
+                                    <CardReact.Text style={{ fontSize: '30px' }}>{card.ruWord}</CardReact.Text>
+                                </CardReact.Body>
+
+                                {/* Back Side */}
+                                <CardReact.Body
+                                    className="card-back"
+                                    style={{
+                                        position: 'absolute',
+                                        width: '100%',
+                                        height: '100%',
+                                        backfaceVisibility: 'hidden',
+                                        transform: 'rotateY(180deg)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        flexDirection: 'column'
+                                    }}
+                                >
+                                    <CardReact.Img
+                                        style={{ height: '45%', width: '50%', objectFit: 'contain', pointerEvents: 'none', overflow: 'hidden' }}
+                                        src={card.imgUrl}
+                                        alt={card.engWord}
+                                    />
+                                    <Row>
+                                        <Col style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+                                            <div style={{ display: 'flex' }}>
+                                                <Button onClick={() => handleTriangleClick(card.engWord)} variant="outline-light" style={{ borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" style={{ height: '30px' }} fill="#BBDDFF" viewBox="0 0 384 512">
+                                                        <path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 
                                                 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"
-                                                />
-                                            </svg>
-                                        </Button>
-                                        <CardReact.Text style={{ fontSize: '30px' }}>{card.engWord}</CardReact.Text>
-                                    </div>
-                                    <CardReact.Text style={{ fontSize: '30px' }}>{card.exampleOfUsage}</CardReact.Text>
-                                </Col>
-                            </Row>
-                        </CardReact.Body>
-                    </CardReact>
-                )}
+                                                        />
+                                                    </svg>
+                                                </Button>
+                                                <CardReact.Text style={{ fontSize: '30px' }}>{card.engWord}</CardReact.Text>
+                                            </div>
+                                            <CardReact.Text style={{ fontSize: '30px' }}>{card.exampleOfUsage}</CardReact.Text>
+                                        </Col>
+                                    </Row>
+                                </CardReact.Body>
+                            </CardReact>
+                        )
+                        :
+                        <span style={{margin: '40% 0 50% 0', fontSize: '25px'}}>You do not have any cards. Please add some cards.</span>
+                }
             </div>
         </Container >
     )
 }
-
-
-/*
-if (isFlipped[index]) {
-            if (event.key === 'ArrowLeft') {
-                try {
-                    await cardService.incorrectAnswer(id);
-                } catch (error) {
-                    console.log("No answer given", error)
-                }
-                setXMoveLeft(prevState => {
-                    const newState = [...prevState];
-                    newState[index] = true;
-                    return newState;
-                });
-                setIsFlipped(prevState => {
-                    const newFlipped = [...prevState];
-                    newFlipped[index] = false; // Сбрасываем состояние переворота для карточки
-                    return newFlipped;
-                });
-
-                setTimeout(() => {
-                    setZIndexes(prevState => {
-                        const newZIndex = [...prevState];
-                        newZIndex[index] = -1;  // Устанавливаем низкий z-index для текущей карточки
-                        return newZIndex;
-                    });
-                }, 250);
-
-                setTimeout(() => {
-                    setCards(prevCards => {
-                        const newCards = prevCards.filter(currentCard => currentCard.id !== id); // Удаляем карточку из массива
-                        newCards.unshift({ ...card, flipped: false });
-                        return newCards;
-                    });
-                    setXMoveLeft(prevState => {
-                        const newState = [...prevState];
-                        newState[index] = false;
-                        return newState;
-                    });
-                }, 500);
-            } else if (event.key === 'ArrowRight') {
-                try {
-                    await cardService.correctAnswer(id);
-                } catch (error) {
-                    console.log("No answer given", error)
-                }
-                setXMoveRight(prevState => {
-                    const newState = [...prevState]
-                    newState[index] = !newState[index]
-                    return newState
-                })
-                setIsFlipped(prevState => {
-                    const newFlipped = [...prevState];
-                    newFlipped[index] = false; // Сбрасываем состояние переворота для карточки
-                    return newFlipped;
-                });
-
-                setTimeout(() => {
-                    setZIndexes(prevState => {
-                        const newZIndex = [...prevState];
-                        newZIndex[index] = -1;  // Установить zIndex в 0 после задержки
-                        return newZIndex;
-                    });
-                }, 250); // 250 миллисекунд задержки
-
-                setTimeout(() => {
-                    setCards(prevCards => {
-                        const newCards = prevCards.filter(currentCard => currentCard.id !== id); // Удаляем карточку из массива
-                        newCards.unshift({ ...card, flipped: false });
-                        return newCards;
-                    });
-                    setXMoveRight(prevState => {
-                        const newState = [...prevState];
-                        newState[index] = false;
-                        return newState;
-                    });
-                }, 500);
-            }
-        }
-*/

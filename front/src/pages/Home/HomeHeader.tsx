@@ -2,20 +2,20 @@ import { useState } from 'react'
 import { Container, Button, Image, Row, Col, Dropdown } from 'react-bootstrap'
 import { ThemeRolingMenu } from './HomeThemeRolingMenu'
 import ukImage from '../../assets/images/uk.png'
+import { useNavigate } from 'react-router-dom'
 
 export const HomeHeader = () => {
 
+    const navigate = useNavigate();
     const [showTheme, setShowTheme] = useState<boolean>(false)
 
     const handleTheme = () => setShowTheme(!showTheme)
 
-    const handleLogin = () => {
-
-    }
-
-    const handleRegister = () => {
-
-    }
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/login');
+    };
+    
 
     return (
         <header className='shadow-sm' style={{ borderBottom: '1px solid #E2EDF5', height: '75px', display: 'flex' }}>
@@ -50,7 +50,7 @@ export const HomeHeader = () => {
                                 />
                             </svg>
                         </Button> */}
-                        <Button href='/login' variant="outline-light" style={{ borderRadius: '50%', height: '60px', width: '60px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Button onClick={handleLogout} href='/login' variant="outline-light" style={{ borderRadius: '50%', height: '60px', width: '60px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={{ width: '40px', height: '40px' }}>
                                 <path fill='#B197FC' d="M352 96l64 0c17.7 0 32 14.3 32 32l0 256c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0c53 0 96-43 96-96l0-256c0-53-43-96-96-96l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32zm-9.4 182.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L242.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128z" />
                             </svg>

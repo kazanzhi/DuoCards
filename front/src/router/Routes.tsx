@@ -4,19 +4,47 @@ import { Home } from "../pages/Home/Home";
 import { CreateCard } from "../pages/CreateCard/CreateCard";
 import { Learn } from "../pages/Learn/Learn";
 import LoginSignup from "../pages/LoginSignup/LoginSignup";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
     {
         path: '/',
         element: <App />,
         children: [
-            { path: '/', element: <Home /> },
-            { path: 'create', element: <CreateCard /> },
-            { path: 'learn', element: <Learn /> },
+            {
+                path: '/',
+                element: (
+                    <ProtectedRoute>
+                        <Home />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: 'create',
+                element: (
+                    <ProtectedRoute>
+                        <CreateCard />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: 'learn',
+                element: (
+                    <ProtectedRoute>
+                        <Learn />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: 'edit/:id',
+                element: (
+                    <ProtectedRoute>
+                        <CreateCard />
+                    </ProtectedRoute>
+                )
+            },
             { path: 'login', element: <LoginSignup /> },
             { path: 'signup', element: <LoginSignup /> },
-            { path: 'edit/:id', element: <CreateCard /> }
-            // path: '*'
         ]
     }
 ])
