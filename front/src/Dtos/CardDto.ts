@@ -1,5 +1,6 @@
 export type CardDto = {
     ruWord: string,
     engWord: string,
-    exampleOfUsage: string
+    exampleOfUsage: string,
+    ImageUrl: string
 }
