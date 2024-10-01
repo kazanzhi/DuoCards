@@ -1,0 +1,16 @@
+appsettings.json
+appsettings.Development.json
+
+/bin
+/obj
+
+/logs
+
+/node_modules
+
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates

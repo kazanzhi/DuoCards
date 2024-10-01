@@ -8,14 +8,18 @@ namespace api.Services
     public class CardImageService : ICardImageService
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        public CardImageService(IHttpClientFactory httpClientFactory)
+        private readonly IConfiguration _configuration;
+        public CardImageService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
+
         }
         public async Task<string> GetImageUrl(string engWord)
         {
             var client = _httpClientFactory.CreateClient();
-            client.DefaultRequestHeaders.Add("Authorization", "Client-ID SlF-DFziPzpfBCnhuZorQPkkf1_jFfeoelOyJtanttI");
+            var apiKey = _configuration["Unplash:ApiKey"];
+            client.DefaultRequestHeaders.Add("Authorization", apiKey);
             var response = await client.GetAsync($"https://api.unsplash.com/photos/random?query={engWord}");
 
             if (!response.IsSuccessStatusCode)
