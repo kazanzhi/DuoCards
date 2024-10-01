@@ -18,13 +18,20 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>(options => 
+builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Registering IHttpClientFactory
+builder.Services.AddHttpClient();
+
+
+builder.Services.AddScoped<ICardImageService, CardImageService>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<ICardManagementService, CardManagementService>();
 builder.Services.AddScoped<ICardManagementRepository, CardManagementRepository>();
 builder.Services.AddScoped<TranslationService>();
 builder.Services.AddScoped<TokenService>();
+
 
 //add HangFire
 builder.Services.AddHangfire(x => x.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));

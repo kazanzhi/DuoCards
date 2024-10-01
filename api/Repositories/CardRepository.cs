@@ -12,20 +12,22 @@ namespace api.Repositories
     {
         private readonly DataContext _context;
         private readonly TranslationService _translationService;
-        public CardRepository(DataContext context, TranslationService translateService)
+        private readonly ICardImageService _cardImageService;
+        public CardRepository(DataContext context, TranslationService translateService, ICardImageService cardImageService)
         {
             _translationService = translateService;
             _context = context;
+            _cardImageService = cardImageService;
         }
 
-        public async Task<Card> CreateCard(CardDto cardDto, string userId)  //done
+        public async Task<Card> CreateCard(CardDto cardDto, string userId)
         {
             var createdCard = new Card
             {
                 EngWord = cardDto.EngWord,
                 RuWord = cardDto.RuWord,
                 ExampleOfUsage = cardDto.ExampleOfUsage,
-                ImgUrl = "https://i.natgeofe.com/k/6496b566-0510-4e92-84e8-7a0cf04aa505/red-fox-portrait.jpg?w=1084.125&h=721.875",
+                ImgUrl = cardDto.ImageUrl,
                 CardStatus = Enum.CardStatus.Learn,
                 SuccessfulAttempts = 0,
                 ReviewCount = 0,
@@ -59,7 +61,7 @@ namespace api.Repositories
                 updatedCard.EngWord = cardDto.EngWord;
                 updatedCard.RuWord = cardDto.RuWord;
                 updatedCard.ExampleOfUsage = cardDto.ExampleOfUsage;
-
+                updatedCard.ImgUrl = cardDto.ImageUrl;
 
                 return await _context.SaveChangesAsync() > 0;
             }

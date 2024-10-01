@@ -62,5 +62,13 @@ export const cardService = {
             }
         })
         return response.data
+    },
+    async getImage(engWord: string): Promise<string> {
+        const response = await axios.get<string>(`${API_KEY}/get-image/${engWord}`, {
+            headers: {
+                Authorization: `Bearer ${getToken()}`
+            }
+        })
+        return response.data
     }
 }

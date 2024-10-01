@@ -14,6 +14,7 @@ export const CreateCard = (props: Props) => {
     const [ruWord, setRuWord] = useState<string>('')
     const [engWord, setEngWord] = useState<string>('')
     const [exampleOfUsage, setExampleOfUsage] = useState<string>('')
+    const [image, setImage] = useState<string>("https://cdn.duocards.com/svg/addimage.svg")
     const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
     const [isEditMode, setIsEditMode] = useState<boolean>(false)
 
@@ -30,6 +31,8 @@ export const CreateCard = (props: Props) => {
                         setRuWord(card.ruWord)
                         setEngWord(card.engWord)
                         setExampleOfUsage(card.exampleOfUsage)
+                        setImage(card.imgUrl)
+                        
                     }
                 } catch (error) {
                     console.log('Error fetching card:', error)
@@ -45,7 +48,8 @@ export const CreateCard = (props: Props) => {
         const newCard: CardDto = {
             ruWord: ruWord,
             engWord: engWord,
-            exampleOfUsage: exampleOfUsage
+            exampleOfUsage: exampleOfUsage,
+            ImageUrl: image
         }
         if (isEditMode) {
             try{
@@ -63,6 +67,17 @@ export const CreateCard = (props: Props) => {
         redirect("/")
     }
 
+    const fetchCardImage = async (word: string) => {
+        try{
+            const imageUrl = await cardService.getImage(word)
+            if (imageUrl) {
+                setImage(imageUrl); // Обновляем состояние для картинки
+            }
+
+        }catch(error){
+            console.log(error)
+        }
+    }
 
     const fetchTranslation = async (word: string) => {
         try {
@@ -83,7 +98,8 @@ export const CreateCard = (props: Props) => {
 
             // Устанавливаем новый таймаут
             const timeout = setTimeout(() => {
-                fetchTranslation(value); // Запрос перевода после 1  секунд бездействия
+                fetchTranslation(value);
+                fetchCardImage(value)
             }, 1000);
 
             setTypingTimeout(timeout); // Сохраняем таймаут в состоянии
@@ -103,7 +119,7 @@ export const CreateCard = (props: Props) => {
                             <path fill='white' d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
                         </svg>
                     </Button>
-                    <Image style={{ height: '300px', objectFit: 'cover', marginTop: '20px' }} src='https://i.natgeofe.com/k/6496b566-0510-4e92-84e8-7a0cf04aa505/red-fox-portrait.jpg?w=1084.125&h=721.875' />
+                    <Image style={{ height: '300px', objectFit: 'cover', marginTop: '20px' }} src={image} />
                 </Col>
             </Row>
             <Row style={{ display: 'flex', justifyContent: 'center', height: '100px' }}>

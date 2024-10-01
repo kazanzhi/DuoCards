@@ -83,14 +83,14 @@ namespace api.Services
         {
             card.CardStatus = CardStatus.Known;
             card.SuccessfulAttempts = 0;
-            card.NextReviewDate = DateTime.Now.AddMinutes(5);
+            card.NextReviewDate = DateTime.Now.AddHours(5);
             card.ReviewCount++;
         }
 
         private void PromoteToLearnedStatus(Card card)
         {
             card.CardStatus = CardStatus.Learned;
-            card.NextReviewDate = DateTime.Now.AddMinutes(10);
+            card.NextReviewDate = DateTime.Now.AddHours(24);
             card.SuccessfulAttempts = 0;
             card.ReviewCount = 0;
         }

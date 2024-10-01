@@ -15,12 +15,14 @@ namespace api.Controllers
         private readonly ICardRepository _cardRepository;
         private readonly ICardManagementService _cardManagementService;
         private readonly UserManager<AppUser> _userManager;
+        private readonly ICardImageService _cardImageService;
 
-        public CardController(ICardRepository cardRepository, ICardManagementService cardManagementService, UserManager<AppUser> userManager)
+        public CardController(ICardRepository cardRepository, ICardManagementService cardManagementService, UserManager<AppUser> userManager, ICardImageService cardImageService)
         {
             _cardRepository = cardRepository;
             _cardManagementService = cardManagementService;
             _userManager = userManager;
+            _cardImageService = cardImageService;
         }
 
         [Authorize]
@@ -123,5 +125,19 @@ namespace api.Controllers
 
             return BadRequest();
         }
+
+        [Authorize]
+        [HttpGet("get-image/{word}")]
+        public async Task<IActionResult> GetImageForWord(string word)
+        {
+            try
+            {
+                var imgUrl = await _cardImageService.GetImageUrl(word);
+                return Ok(imgUrl);
+            }catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        } 
     }
 }
