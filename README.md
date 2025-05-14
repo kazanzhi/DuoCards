@@ -42,7 +42,7 @@ Handles errors, including authorization issues, during API requests.
 Progressive Learning:
 Cards stack on top of each other.
 Learn one card at a time, with the ability to move to the next after each review.
-Responsive Design:
 
+Responsive Design:
 Mobile-friendly UI.
 The layout adjusts dynamically based on screen size, ensuring a seamless experience across devices.
