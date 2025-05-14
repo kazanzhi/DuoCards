@@ -1,10 +1,10 @@
-﻿using api.Dto;
+﻿using api.Constants;
+using api.Dto;
 using api.Interfaces;
 using api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace api.Controllers
 {
@@ -15,17 +15,16 @@ namespace api.Controllers
         private readonly ICardRepository _cardRepository;
         private readonly ICardManagementService _cardManagementService;
         private readonly UserManager<AppUser> _userManager;
-        private readonly ICardImageService _cardImageService;
+        
 
-        public CardController(ICardRepository cardRepository, ICardManagementService cardManagementService, UserManager<AppUser> userManager, ICardImageService cardImageService)
+        public CardController(ICardRepository cardRepository, ICardManagementService cardManagementService, UserManager<AppUser> userManager)
         {
             _cardRepository = cardRepository;
             _cardManagementService = cardManagementService;
             _userManager = userManager;
-            _cardImageService = cardImageService;
         }
 
-        [Authorize]
+        [Authorize(Roles = UserRoles.User)]
         [HttpGet("get")]
         public async Task<ActionResult<List<Card>>> GetAllCards()
         {
@@ -34,13 +33,13 @@ namespace api.Controllers
                 return Unauthorized();
 
             var cards = await _cardRepository.GetAllCards(user.Id);
-            if(cards == null)
+            if(!cards.Any())
                 return NoContent();
 
             return Ok(cards);
         }
 
-        [Authorize]
+        [Authorize(Roles = UserRoles.User)]
         [HttpGet("get/{id}")]
         public async Task<ActionResult<Card>> GetById(int id)
         {
@@ -55,7 +54,7 @@ namespace api.Controllers
             return Ok(card);
         }
 
-        [Authorize]
+        [Authorize(Roles = UserRoles.User)]
         [HttpPost("create")]
         public async Task<ActionResult<Card>> CreateCard([FromBody] CardDto cardDto)
         {
@@ -70,7 +69,7 @@ namespace api.Controllers
             return Ok();
         }
 
-        [Authorize]
+        [Authorize(Roles = UserRoles.User)]
         [HttpPut("update/{id}")]
         public async Task<ActionResult<Card>> UpdateCard([FromBody] CardDto cardDto, int id)
         {
@@ -85,18 +84,8 @@ namespace api.Controllers
             return Ok();
         }
         
-        [Authorize]
-        [HttpGet("translate/{engWord}")]
-        public async Task<ActionResult<string>> Translate(string engWord)
-        {
-            var translatedWord = await _cardRepository.TranslateWord(engWord);
-            if (string.IsNullOrEmpty(translatedWord))
-                return NotFound();
 
-            return Ok(translatedWord);
-        }
-
-        [Authorize]
+        [Authorize(Roles = UserRoles.User)]
         [HttpPost("{id}/correct")]
         public async Task<ActionResult> CorrectAnswer(int id)
         {
@@ -111,7 +100,7 @@ namespace api.Controllers
             return BadRequest();
         }
 
-        [Authorize]
+        [Authorize(Roles = UserRoles.User)]
         [HttpPost("{id}/incorrect")]
         public async Task<ActionResult> IncorrectAnswer(int id)
         {
@@ -125,19 +114,5 @@ namespace api.Controllers
 
             return BadRequest();
         }
-
-        [Authorize]
-        [HttpGet("get-image/{word}")]
-        public async Task<IActionResult> GetImageForWord(string word)
-        {
-            try
-            {
-                var imgUrl = await _cardImageService.GetImageUrl(word);
-                return Ok(imgUrl);
-            }catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        } 
     }
 }

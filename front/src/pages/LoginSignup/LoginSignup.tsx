@@ -12,7 +12,9 @@ export default function LoginSignup({ }: Props) {
     const [loginState, setLoginState] = useState<boolean>(false)
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
-    const [errors, setErrors] = useState<{ email?: string, password?: string, general?: string }>({})
+    const [errors, setErrors] = useState<{ email?: string, password?: string }>({})
+    const [generalError, setGeneralError] = useState<string | null>(null); // Состояние для общего сообщения об ошибке
+
 
     useEffect(() => {
         if (loginState) {
@@ -59,16 +61,27 @@ export default function LoginSignup({ }: Props) {
             setLoginState(true)
             setEmail('')
             setPassword('')
+            setGeneralError('')
             setErrors({})
         } else {
             try {
-                const response = await authService.Login({ email, password });
+                if (!email || !password) {
+                    setGeneralError("Email or password missing")
+                    console.log("Email or password missing");
+                    return;
+                }
+                const response = await authService.Login({ email: email, password: password });
                 console.log('Login successful', response);
-                localStorage.setItem('token', response.token);
-                navigate('/');
+
+                if (response.token) {
+                    localStorage.setItem('token', response.token);
+                    navigate('/');
+                } else {
+                    setGeneralError('Invalid email or password');
+                }
             } catch (error) {
                 console.error('Login error', error);
-                setErrors({ general: 'Invalid email or password' });  // Обрабатываем ошибки
+                setGeneralError('Invalid email or password');
             }
         }
     }
@@ -78,16 +91,20 @@ export default function LoginSignup({ }: Props) {
             setLoginState(false)
             setEmail('')
             setPassword('')
+            setGeneralError('')
             setErrors({})
         } else {
             if (validateForm()) {
                 try {
-                    const response = await authService.Register({ email, password });  // Используем authService для регистрации
-                    console.log('Registration successful', response);
-                    navigate('/login');  // После успешной регистрации перенаправляем на страницу входа
+                    const response = await authService.Register({ email, password });
+                    if(response.message)
+                        setGeneralError(response.message)
+
+                    navigate('/login');
                 } catch (error) {
                     console.error('Registration error', error);
-                    setErrors({ general: 'Registration failed' });  // Обрабатываем ошибки
+                    setGeneralError('Registration error');
+
                 }
             }
         }
@@ -99,7 +116,7 @@ export default function LoginSignup({ }: Props) {
                 style={{
                     border: '1px solid #E3E2E0',
                     borderRadius: '10px',
-                    height: '500px',
+                    height: !generalError ? '500px' : '600px',
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -124,6 +141,7 @@ export default function LoginSignup({ }: Props) {
                     {errors.password && <div className="invalid-feedback" style={{ fontSize: '20px' }}>{errors.password}</div>}
                 </Form.Group>
                 {loginState && <Form.Text style={{ marginTop: '10px', fontSize: '20px' }}>Forgor password? <span>Click here!</span></Form.Text>}
+                {generalError && <div className="alert alert-danger" style={{ width: '500px', marginTop: '15px' }}>{generalError}</div>}
                 {loginState ?
                     <Form.Group style={{ display: 'flex', justifyContent: 'space-between', width: '400px', marginTop: '30px' }}>
                         <Button onClick={handleSignUp} variant='outline-secondary' style={{ width: '160px', borderRadius: '50px', fontSize: '25px' }}>Sign Up</Button>
@@ -139,3 +157,8 @@ export default function LoginSignup({ }: Props) {
         </Container>
     )
 }
+
+/*
+Login:
+    1)при вводе неверных данных return "invalid email or password"
+*/

@@ -29,8 +29,8 @@ builder.Services.AddScoped<ICardImageService, CardImageService>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<ICardManagementService, CardManagementService>();
 builder.Services.AddScoped<ICardManagementRepository, CardManagementRepository>();
-builder.Services.AddScoped<TranslationService>();
-builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<ITranslationService,TranslationService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 
 //add HangFire
@@ -75,6 +75,12 @@ builder.Services.AddAuthentication(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await RoleInitializer.InitializeAsync(services);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

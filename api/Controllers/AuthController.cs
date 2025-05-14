@@ -1,4 +1,5 @@
 ﻿using api.Constants;
+using api.Interfaces;
 using api.Models;
 using api.Services;
 using Microsoft.AspNetCore.Identity;
@@ -12,9 +13,9 @@ namespace api.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly TokenService _tokenService;
+        private readonly ITokenService _tokenService;
 
-        public AuthController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, TokenService tokenService)
+        public AuthController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, ITokenService tokenService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -25,13 +26,17 @@ namespace api.Controllers
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {   
             var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            if (user == null)
+                return Unauthorized("Invalid credentials");
+
+            if (!await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                var token = _tokenService.CreateToken(user);
-                return Ok(new {Token =  token});
+                return Unauthorized("Invalid credentials");
             }
 
-            return Unauthorized();
+            var token = _tokenService.CreateToken(user);
+
+            return Ok(new { Token = token });
         }
 
         [HttpPost("register")]
@@ -44,7 +49,7 @@ namespace api.Controllers
 
             var userExist = await _userManager.FindByEmailAsync(model.Email);
             if (userExist != null)
-                return BadRequest("User already exist.");
+                return Conflict(new { message = "User with this email already exists" });
 
             var user = new AppUser {
                 Email = model.Email,
@@ -53,17 +58,12 @@ namespace api.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
-            if (result.Succeeded)
-            {
-                if(await _roleManager.RoleExistsAsync(UserRoles.User))
-                {
-                    await _userManager.AddToRoleAsync(user, UserRoles.User);
-                }
+            if (!result.Succeeded)
+                return StatusCode(StatusCodes.Status400BadRequest, $"User creation failed: {string.Join(", ", result.Errors.Select(e => e.Description))}");
 
-                return Ok("User created succesfully");
-            }
+            await _userManager.AddToRoleAsync(user, UserRoles.User);
 
-            return BadRequest(result.Errors);
+            return Ok("User created successfully");
         }
     }
 }

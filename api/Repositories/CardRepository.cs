@@ -2,8 +2,6 @@
 using api.Dto;
 using api.Interfaces;
 using api.Models;
-using api.Services;
-using Google.Apis.Translate.v2;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repositories
@@ -11,13 +9,9 @@ namespace api.Repositories
     public class CardRepository : ICardRepository
     {
         private readonly DataContext _context;
-        private readonly TranslationService _translationService;
-        private readonly ICardImageService _cardImageService;
-        public CardRepository(DataContext context, TranslationService translateService, ICardImageService cardImageService)
+        public CardRepository(DataContext context)
         {
-            _translationService = translateService;
             _context = context;
-            _cardImageService = cardImageService;
         }
 
         public async Task<Card> CreateCard(CardDto cardDto, string userId)
@@ -41,7 +35,7 @@ namespace api.Repositories
             return createdCard;
         }
     
-        public async Task<List<Card>> GetAllCards(string userId)    //done
+        public async Task<List<Card>> GetAllCards(string userId)
         {
             var cards = await _context.Cards
                 .Where(c => c.AppUserId == userId)
@@ -50,7 +44,7 @@ namespace api.Repositories
             return cards;
         }
 
-        public async Task<bool> UpdateCard(CardDto cardDto, int id, string userId)  //done
+        public async Task<bool> UpdateCard(CardDto cardDto, int id, string userId)
         {
             var updatedCard = await _context.Cards
                 .Where(c => c.Id == id && c.AppUserId == userId)
@@ -69,7 +63,7 @@ namespace api.Repositories
             return false;
         }
 
-        public async Task<Card> GetById(int id, string userId)  //done
+        public async Task<Card> GetById(int id, string userId)
         {
             var card = await _context.Cards
                 .Where(c => c.Id == id && c.AppUserId == userId)
@@ -79,12 +73,6 @@ namespace api.Repositories
                 return null;
 
             return card;
-        }
-
-        public async Task<string> TranslateWord(string word)    //done
-        {
-            var translatedWord = await _translationService.Translate(word);
-            return translatedWord;
         }
     }
 }

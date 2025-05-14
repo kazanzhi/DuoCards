@@ -9,6 +9,5 @@ namespace api.Interfaces
         Task<Card> GetById(int id, string userId);  //done
         Task<bool> UpdateCard(CardDto cardDto, int id, string userId);  //done
         Task<Card> CreateCard(CardDto card, string userID); //done
-        Task<string> TranslateWord(string word);    //done
     }
 }

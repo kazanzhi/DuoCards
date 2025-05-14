@@ -1,25 +1,21 @@
-﻿using Google.Cloud.Translation.V2;
+﻿using api.Interfaces;
+using System.Text.Json;
 
 namespace api.Services
 {
-    public class TranslationService
+    public class TranslationService : ITranslationService
     {
-        private readonly TranslationClient _translationClient;
-        private readonly string _apiKey;
-        public TranslationService(IConfiguration configuration)
+        public async Task<string> Translate(string text)
         {
-            _apiKey = configuration.GetValue<string>("GoogleCloud:ApiKey");
-            if (string.IsNullOrEmpty(_apiKey))
-            {
-                throw new InvalidOperationException("GOOGLE_CLOUD_API_KEY environment variable is not set.");
-            }
+            var url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ru&dt=t&q={Uri.EscapeDataString(text)}";
 
-            _translationClient = TranslationClient.CreateFromApiKey(_apiKey);
-        }
-        public async Task<string> Translate(string inputText)
-        {
-            TranslationResult result = await Task.Run(() => _translationClient.TranslateText(inputText, LanguageCodes.Russian));
-            return result.TranslatedText;
+            using var client = new HttpClient();
+            var response = await client.GetStringAsync(url);
+
+            var parsed = JsonSerializer.Deserialize<JsonElement>(response);
+            var translated = parsed[0][0][0].GetString();
+
+            return translated;
         }
     }
 }

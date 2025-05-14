@@ -1,7 +1,5 @@
 ﻿using api.Interfaces;
 using api.Models.Unsplash;
-using Microsoft.OpenApi.Validations;
-using System.Data;
 
 namespace api.Services
 {

@@ -13,20 +13,38 @@ interface RegisterData {
 }
 
 interface LoginResponse {
-    token: string
+    token?: string,
+    message?: string
 }
 
 interface RegisterResponse {
-    message: string
+    message?: string,
+    errors?: string[]
 }
 
 export const authService = {
     async Register(registerData: RegisterData): Promise<RegisterResponse> {
-        const response = await axios.post<RegisterResponse>(`${API_KEY}/register`, registerData)
-        return response.data
+        try {
+            const response = await axios.post<RegisterResponse>(`${API_KEY}/register`, registerData)
+            return response.data
+        } catch (error: any) {
+            if (error.response && error.response.data) {
+                return error.response.data;
+            } else {
+                return { message: "An error occurred during registration" };
+            }
+        }
     },
     async Login(loginData: LoginData): Promise<LoginResponse> {
-        const response = await axios.post<LoginResponse>(`${API_KEY}/login`, loginData)
-        return response.data
+        try {
+            const response = await axios.post<LoginResponse>(`${API_KEY}/login`, loginData)
+            return response.data
+        } catch (error: any) {
+            if (error.response && error.response.data) {
+                return error.response.data;
+            } else {
+                return { message: "An error occurred during login" };
+            }
+        }
     }
 }

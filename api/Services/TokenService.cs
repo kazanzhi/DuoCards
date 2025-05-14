@@ -1,4 +1,6 @@
-﻿using api.Models;
+﻿using api.Interfaces;
+using api.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -6,34 +8,45 @@ using System.Text;
 
 namespace api.Services
 {
-    public class TokenService
+    public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
-        public TokenService(IConfiguration configuration)
+        private readonly UserManager<AppUser> _userManager;
+        public TokenService(IConfiguration configuration, UserManager<AppUser> userManager)
         {
+            _userManager = userManager;
             _configuration = configuration;
         }
 
-        public string CreateToken(AppUser user)
+        public async Task<string> CreateToken(AppUser user)
         {
-            var authClaims = new List<Claim>
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) //unique token id
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+            foreach(var role in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.UtcNow.AddHours(3),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey,SecurityAlgorithms.HmacSha256)
+                expires: DateTime.UtcNow.AddHours(1),
+                claims: claims,
+                signingCredentials: creds
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return tokenString;
         }
     }
 }
