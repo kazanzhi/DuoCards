@@ -40,23 +40,5 @@ namespace api.Repositories
 
             return await _context.SaveChangesAsync() > 0;
         }
-
-        public async Task<bool> CorrectAnswer(int id, string userId)
-        {
-            var card = await _context.Cards.FindAsync(id);
-            if (card == null)
-                return false;
-
-            return await _context.SaveChangesAsync() > 0;
-        }
-
-        public async Task<bool> IncorrectAnswer(int id, string userId)
-        {
-            var card = await _context.Cards.FindAsync(id);
-            if (card == null)
-                return false;
-
-            return await _context.SaveChangesAsync() > 0;
-        }
     }
 }

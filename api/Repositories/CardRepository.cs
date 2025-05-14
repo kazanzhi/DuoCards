@@ -16,6 +16,9 @@ namespace api.Repositories
 
         public async Task<Card> CreateCard(CardDto cardDto, string userId)
         {
+            if (cardDto == null)
+                throw new ArgumentNullException(nameof(cardDto));
+
             var createdCard = new Card
             {
                 EngWord = cardDto.EngWord,
@@ -46,16 +49,19 @@ namespace api.Repositories
 
         public async Task<bool> UpdateCard(CardDto cardDto, int id, string userId)
         {
-            var updatedCard = await _context.Cards
+            if (cardDto is null)
+                return false;
+
+            var existingCard = await _context.Cards
                 .Where(c => c.Id == id && c.AppUserId == userId)
                 .FirstOrDefaultAsync();
             
-            if(updatedCard != null)
+            if(existingCard != null)
             {
-                updatedCard.EngWord = cardDto.EngWord;
-                updatedCard.RuWord = cardDto.RuWord;
-                updatedCard.ExampleOfUsage = cardDto.ExampleOfUsage;
-                updatedCard.ImgUrl = cardDto.ImageUrl;
+                existingCard.EngWord = cardDto.EngWord;
+                existingCard.RuWord = cardDto.RuWord;
+                existingCard.ExampleOfUsage = cardDto.ExampleOfUsage;
+                existingCard.ImgUrl = cardDto.ImageUrl;
 
                 return await _context.SaveChangesAsync() > 0;
             }

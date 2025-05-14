@@ -17,13 +17,23 @@ namespace api.Controllers
 
         [Authorize(Roles = UserRoles.User)]
         [HttpGet("translate/{engWord}")]
-        public async Task<ActionResult<string>> Translate(string engWord)
+        public async Task<IActionResult> Translate(string engWord)
         {
-            var translatedWord = await _translationService.Translate(engWord);
-            if (string.IsNullOrEmpty(translatedWord))
-                return NotFound();
+            try
+            {
+                var translatedWord = await _translationService.Translate(engWord);
 
-            return Ok(translatedWord);
+                if (string.IsNullOrEmpty(translatedWord))
+                {
+                    return NotFound("Translation not found.");
+                }
+
+                return Ok(translatedWord);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while translating.", error = ex.Message });
+            }
         }
     }
 }

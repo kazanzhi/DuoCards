@@ -17,17 +17,32 @@ namespace api.Controllers
         }
 
         [Authorize(Roles = UserRoles.User)]
-        [HttpGet("get-image/{word}")]
-        public async Task<IActionResult> GetImageForWord(string word)
+        [HttpGet("{word}")]
+        public async Task<IActionResult> GetImage(string word)
         {
+            if (string.IsNullOrWhiteSpace(word))
+                return BadRequest("Word must not be empty.");
+
             try
             {
-                var imgUrl = await _cardImageService.GetImageUrl(word);
-                return Ok(imgUrl);
+                var imageUrl = await _cardImageService.GetImageUrl(word);
+
+                if (string.IsNullOrWhiteSpace(imageUrl))
+                    return NotFound("No image found for the given word.");
+
+                return Ok(imageUrl);
+            }
+            catch (HttpRequestException)
+            {
+                return StatusCode(503, "Image service is unavailable.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, "Internal server error.");
             }
         }
     }

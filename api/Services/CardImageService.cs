@@ -15,19 +15,24 @@ namespace api.Services
         }
         public async Task<string> GetImageUrl(string engWord)
         {
-            var client = _httpClientFactory.CreateClient();
-            var apiKey = _configuration["Unplash:ApiKey"];
+            using var client = _httpClientFactory.CreateClient();
+            var apiKey = _configuration["Unsplash:ApiKey"];
             client.DefaultRequestHeaders.Add("Authorization", apiKey);
             var response = await client.GetAsync($"https://api.unsplash.com/photos/random?query={engWord}");
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Failed to get image.");
+                throw new HttpRequestException($"Unsplash API call failed. Status: {response.StatusCode}, Reason: {response.ReasonPhrase}");
             }
 
             var responseData = await response.Content.ReadFromJsonAsync<UnsplashResponse>();
 
-            return responseData?.Urls?.Small ?? string.Empty;
+            if (responseData?.Urls?.Small == null)
+            {
+                throw new InvalidOperationException("Received an empty image URL from Unsplash.");
+            }
+
+            return responseData.Urls.Small;
         }
     }
 }

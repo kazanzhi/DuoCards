@@ -62,7 +62,7 @@ namespace api.Services
 
         public async Task CheckCardStatus(Card card)
         {
-            if (card.CardStatus == CardStatus.Known && DateTime.Now >= card.NextReviewDate)
+            if (card.CardStatus == CardStatus.Known && DateTime.UtcNow >= card.NextReviewDate)
             {
                 if (card.ReviewCount >= 3)
                 {
@@ -73,7 +73,7 @@ namespace api.Services
                     PromoteToLearnStatus(card);
                 }
             }
-            else if (card.CardStatus == CardStatus.Learned && DateTime.Now >= card.NextReviewDate)
+            else if (card.CardStatus == CardStatus.Learned && DateTime.UtcNow >= card.NextReviewDate)
             {
                 ResetToLearnStatus(card);
             }
@@ -83,14 +83,14 @@ namespace api.Services
         {
             card.CardStatus = CardStatus.Known;
             card.SuccessfulAttempts = 0;
-            card.NextReviewDate = DateTime.Now.AddHours(5);
+            card.NextReviewDate = DateTime.UtcNow.AddHours(5);
             card.ReviewCount++;
         }
 
         private void PromoteToLearnedStatus(Card card)
         {
             card.CardStatus = CardStatus.Learned;
-            card.NextReviewDate = DateTime.Now.AddHours(24);
+            card.NextReviewDate = DateTime.UtcNow.AddHours(24);
             card.SuccessfulAttempts = 0;
             card.ReviewCount = 0;
         }

@@ -25,8 +25,8 @@ namespace api.Controllers
         }
 
         [Authorize(Roles = UserRoles.User)]
-        [HttpGet("get")]
-        public async Task<ActionResult<List<Card>>> GetAllCards()
+        [HttpGet]
+        public async Task<IActionResult> GetAllCards()
         {
             var user = await _userManager.GetUserAsync(User);
             if(user == null) 
@@ -40,8 +40,8 @@ namespace api.Controllers
         }
 
         [Authorize(Roles = UserRoles.User)]
-        [HttpGet("get/{id}")]
-        public async Task<ActionResult<Card>> GetById(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -55,8 +55,8 @@ namespace api.Controllers
         }
 
         [Authorize(Roles = UserRoles.User)]
-        [HttpPost("create")]
-        public async Task<ActionResult<Card>> CreateCard([FromBody] CardDto cardDto)
+        [HttpPost]
+        public async Task<IActionResult> CreateCard([FromBody] CardDto cardDto)
         {
             var user = await _userManager.GetUserAsync(User);
             if(user == null)
@@ -66,12 +66,12 @@ namespace api.Controllers
             if (card == null)
                 return BadRequest("Card could not be created.");
 
-            return Ok();
+            return CreatedAtAction(nameof(GetById), new { id = card.Id }, card);
         }
 
         [Authorize(Roles = UserRoles.User)]
-        [HttpPut("update/{id}")]
-        public async Task<ActionResult<Card>> UpdateCard([FromBody] CardDto cardDto, int id)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCard([FromBody] CardDto cardDto, int id)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -81,13 +81,13 @@ namespace api.Controllers
             if (!updatedCard)
                 return NotFound();
 
-            return Ok();
+            return NoContent();
         }
         
 
         [Authorize(Roles = UserRoles.User)]
         [HttpPost("{id}/correct")]
-        public async Task<ActionResult> CorrectAnswer(int id)
+        public async Task<IActionResult> CorrectAnswer(int id)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -97,12 +97,12 @@ namespace api.Controllers
             if(result)
                 return Ok();
 
-            return BadRequest();
+            return NotFound();
         }
 
         [Authorize(Roles = UserRoles.User)]
         [HttpPost("{id}/incorrect")]
-        public async Task<ActionResult> IncorrectAnswer(int id)
+        public async Task<IActionResult> IncorrectAnswer(int id)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -112,7 +112,7 @@ namespace api.Controllers
             if(result)
                 return Ok();
 
-            return BadRequest();
+            return NotFound();
         }
     }
 }
