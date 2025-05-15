@@ -54,7 +54,7 @@ The layout adjusts dynamically based on screen size, ensuring a seamless experie
 
 ### 1. Clone the repo
 git clone https://github.com/kazanzhi/DuoCards.git
-cd your-repo
+cd DuoCards
 
 ### 2. Configuration
 Create a appsettings.Development.json file in the api/ folder:
