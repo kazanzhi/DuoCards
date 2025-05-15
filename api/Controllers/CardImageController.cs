@@ -20,9 +20,6 @@ namespace api.Controllers
         [HttpGet("{word}")]
         public async Task<IActionResult> GetImage(string word)
         {
-            if (string.IsNullOrWhiteSpace(word))
-                return BadRequest("Word must not be empty.");
-
             try
             {
                 var imageUrl = await _cardImageService.GetImageUrl(word);

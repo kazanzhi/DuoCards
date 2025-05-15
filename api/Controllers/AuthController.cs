@@ -12,13 +12,11 @@ namespace api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ITokenService _tokenService;
 
-        public AuthController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, ITokenService tokenService)
+        public AuthController(UserManager<AppUser> userManager, ITokenService tokenService)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
             _tokenService = tokenService;
         }
 
@@ -34,7 +32,7 @@ namespace api.Controllers
                 return Unauthorized("Invalid credentials");
             }
 
-            var token = _tokenService.CreateToken(user);
+            var token = await _tokenService.CreateToken(user);
 
             return Ok(new { Token = token });
         }
@@ -49,7 +47,7 @@ namespace api.Controllers
 
             var userExist = await _userManager.FindByEmailAsync(model.Email);
             if (userExist != null)
-                return Conflict(new { message = "User with this email already exists" });
+                return Conflict("User with this email already exists");
 
             var user = new AppUser {
                 Email = model.Email,

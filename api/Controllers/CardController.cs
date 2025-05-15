@@ -15,8 +15,6 @@ namespace api.Controllers
         private readonly ICardRepository _cardRepository;
         private readonly ICardManagementService _cardManagementService;
         private readonly UserManager<AppUser> _userManager;
-        
-
         public CardController(ICardRepository cardRepository, ICardManagementService cardManagementService, UserManager<AppUser> userManager)
         {
             _cardRepository = cardRepository;
@@ -63,21 +61,19 @@ namespace api.Controllers
                 return Unauthorized();
 
             var card = await _cardRepository.CreateCard(cardDto, user.Id);
-            if (card == null)
-                return BadRequest("Card could not be created.");
 
             return CreatedAtAction(nameof(GetById), new { id = card.Id }, card);
         }
 
         [Authorize(Roles = UserRoles.User)]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCard([FromBody] CardDto cardDto, int id)
+        public async Task<IActionResult> UpdateCard([FromBody] CardDto cardDto, int cardId)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return Unauthorized();
 
-            var updatedCard = await _cardRepository.UpdateCard(cardDto, id, user.Id);
+            var updatedCard = await _cardRepository.UpdateCard(cardDto, cardId, user.Id);
             if (!updatedCard)
                 return NotFound();
 
@@ -87,13 +83,13 @@ namespace api.Controllers
 
         [Authorize(Roles = UserRoles.User)]
         [HttpPost("{id}/correct")]
-        public async Task<IActionResult> CorrectAnswer(int id)
+        public async Task<IActionResult> CorrectAnswer(int cardId)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return Unauthorized();
 
-            var result = await _cardManagementService.HandleCorrectAnswer(id, user.Id);
+            var result = await _cardManagementService.HandleCorrectAnswer(cardId, user.Id);
             if(result)
                 return Ok();
 
@@ -102,13 +98,13 @@ namespace api.Controllers
 
         [Authorize(Roles = UserRoles.User)]
         [HttpPost("{id}/incorrect")]
-        public async Task<IActionResult> IncorrectAnswer(int id)
+        public async Task<IActionResult> IncorrectAnswer(int cardId)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return Unauthorized();
 
-            var result = await _cardManagementService.HandleIncorrectAnswer(id, user.Id);
+            var result = await _cardManagementService.HandleIncorrectAnswer(cardId, user.Id);
             if(result)
                 return Ok();
 
