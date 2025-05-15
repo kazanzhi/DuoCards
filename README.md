@@ -13,9 +13,12 @@ JavaScript animations and transitions for card interactions
 Backend:
 C# with ASP.NET Core
 Entity Framework Core
+Identity
+JWT (JSON Web Token)
+xUnit + Moq + FluentAssertions
 Hangfire (for background job scheduling)
-REST API
-SQL Database
+Unsplash API (word image fetching)
+Google Translate API (unofficial, word translation)
 
 Tools:
 GitHub for version control
@@ -46,3 +49,56 @@ Learn one card at a time, with the ability to move to the next after each review
 Responsive Design:
 Mobile-friendly UI.
 The layout adjusts dynamically based on screen size, ensuring a seamless experience across devices.
+
+## ⚙️ Getting Started
+
+### 1. Clone the repo
+git clone https://github.com/your-username/your-repo.git
+cd your-repo
+
+### 2. Configuration
+Create a appsettings.Development.json file in the api/ folder:
+{
+  "JWT": {
+    "Secret": "your-jwt-secret-key",
+    "ValidIssuer": "your-app",
+    "ValidAudience": "your-client"
+  },
+  "Unsplash": {
+    "ApiKey": "Client-ID your-unsplash-api-key"
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "your-db-connection-string"
+  }
+}
+
+### 3. Apply migrations
+cd api
+dotnet ef database update
+
+### 4. Run the app
+dotnet run
+
+### Features
+### Cards (CardController)
+GET /api/card — Get all user cards (User only)
+GET /api/card/{id} — Get a specific card by ID (User only)
+POST /api/card — Create a new card (User only)
+PUT /api/card/{id} — Update a card (User only)
+DELETE /api/card/{id} — Delete a card (User only)
+POST /api/cardmanagement/correct/{cardId} — Mark card as answered correctly (User only)
+POST /api/cardmanagement/incorrect/{cardId} — Mark card as answered incorrectly (User only)
+
+### Translation (TranslationController)
+GET /translation/{engWord} — Translate English word to Russian using Google Translate (User only)
+
+### Card Image (CardImageController)
+Card Image (CardImageController)
+GET /cardimage/{word} — Fetch image for a word using Unsplash API (User only)
+
+### Authentication (AuthController)
+POST /api/account/register — Register a new user
+POST /api/account/login — Login and receive a JWT token
+
+### Running Tests
+Unit Tests cd MyLibraryApp.Tests dotnet test
