@@ -53,7 +53,7 @@ The layout adjusts dynamically based on screen size, ensuring a seamless experie
 ## ⚙️ Getting Started
 
 ### 1. Clone the repo
-git clone https://github.com/your-username/your-repo.git
+git clone https://github.com/kazanzhi/DuoCards.git
 cd your-repo
 
 ### 2. Configuration
