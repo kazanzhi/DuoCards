@@ -5,13 +5,17 @@ namespace api.Services
 {
     public class TranslationService : ITranslationService
     {
-        private static readonly HttpClient client = new HttpClient();
+        private readonly HttpClient _client;
+        public TranslationService(HttpClient client)
+        {
+            _client = client;
+        }
         public async Task<string> Translate(string text)
         {
             try
             {
                 var url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ru&dt=t&q={Uri.EscapeDataString(text)}";
-                var response = await client.GetStringAsync(url);
+                var response = await _client.GetStringAsync(url);
 
                 if (string.IsNullOrEmpty(response))
                 {
