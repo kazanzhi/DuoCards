@@ -16,7 +16,7 @@ namespace api.Controllers
         }
 
         [Authorize(Roles = UserRoles.User)]
-        [HttpGet("translate/{engWord}")]
+        [HttpGet("{engWord}")]
         public async Task<IActionResult> Translate(string engWord)
         {
             try
