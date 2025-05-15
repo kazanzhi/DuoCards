@@ -16,9 +16,6 @@ namespace api.Repositories
 
         public async Task<Card> CreateCard(CardDto cardDto, string userId)
         {
-            if (cardDto == null)
-                throw new ArgumentNullException(nameof(cardDto));
-
             var createdCard = new Card
             {
                 EngWord = cardDto.EngWord,
@@ -49,9 +46,6 @@ namespace api.Repositories
 
         public async Task<bool> UpdateCard(CardDto cardDto, int id, string userId)
         {
-            if (cardDto is null)
-                return false;
-
             var existingCard = await _context.Cards
                 .Where(c => c.Id == id && c.AppUserId == userId)
                 .FirstOrDefaultAsync();
@@ -69,14 +63,10 @@ namespace api.Repositories
             return false;
         }
 
-        public async Task<Card> GetById(int id, string userId)
+        public async Task<Card?> GetById(int id, string userId)
         {
             var card = await _context.Cards
-                .Where(c => c.Id == id && c.AppUserId == userId)
-                .FirstOrDefaultAsync();
-
-            if (card == null)
-                return null;
+                .FirstOrDefaultAsync(c => c.Id == id && c.AppUserId == userId);
 
             return card;
         }
