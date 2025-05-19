@@ -13,12 +13,10 @@ namespace api.Controllers
     public class CardController : ControllerBase
     {
         private readonly ICardRepository _cardRepository;
-        private readonly ICardManagementService _cardManagementService;
         private readonly UserManager<AppUser> _userManager;
-        public CardController(ICardRepository cardRepository, ICardManagementService cardManagementService, UserManager<AppUser> userManager)
+        public CardController(ICardRepository cardRepository, UserManager<AppUser> userManager)
         {
             _cardRepository = cardRepository;
-            _cardManagementService = cardManagementService;
             _userManager = userManager;
         }
 
@@ -78,37 +76,6 @@ namespace api.Controllers
                 return NotFound();
 
             return NoContent();
-        }
-        
-
-        [Authorize(Roles = UserRoles.User)]
-        [HttpPost("{id}/correct")]
-        public async Task<IActionResult> CorrectAnswer(int cardId)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-                return Unauthorized();
-
-            var result = await _cardManagementService.HandleCorrectAnswer(cardId, user.Id);
-            if(result)
-                return Ok();
-
-            return NotFound();
-        }
-
-        [Authorize(Roles = UserRoles.User)]
-        [HttpPost("{id}/incorrect")]
-        public async Task<IActionResult> IncorrectAnswer(int cardId)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-                return Unauthorized();
-
-            var result = await _cardManagementService.HandleIncorrectAnswer(cardId, user.Id);
-            if(result)
-                return Ok();
-
-            return NotFound();
         }
     }
 }

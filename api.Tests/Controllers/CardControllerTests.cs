@@ -4,7 +4,6 @@ using api.Interfaces;
 using api.Models;
 using api.Tests.Helpers;
 using FluentAssertions;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,18 +16,15 @@ namespace api.Tests.Controllers
     {
         private readonly CardController _cardController;
         private readonly Mock<ICardRepository> _cardRepositoryMock;
-        private readonly Mock<ICardManagementService> _cardManagementServiceMock;
         private readonly Mock<UserManager<AppUser>> _userManagerMock;
         public CardControllerTests()
         {
             _userManagerMock = MockUserManager.CreateMockUserManager<AppUser>();
             _cardRepositoryMock = new Mock<ICardRepository>();
-            _cardManagementServiceMock = new Mock<ICardManagementService>();
 
             _cardController = new CardController
             (
                 _cardRepositoryMock.Object,
-                _cardManagementServiceMock.Object,
                 _userManagerMock.Object
             );
         }
@@ -293,130 +289,6 @@ namespace api.Tests.Controllers
 
             //act
             var result = await _cardController.UpdateCard(cardDto, cardId);
-
-            //assert
-            result.Should().BeOfType<NotFoundResult>();
-        }
-
-        [Fact]
-        public async Task CorrectAnswer_ShouldReturnOk_WhenAnswerAdded()
-        {
-            //arrange
-            var testUser = new AppUser
-            {
-                Id = Guid.NewGuid().ToString(),
-                Email = "test@gmail.com"
-            };
-            var cardId = 999;
-
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, testUser.Id)
-            }));
-
-            _cardController.ControllerContext = new ControllerContext
-            {
-                HttpContext = new DefaultHttpContext { User = user }
-            };
-
-            _userManagerMock.Setup(um => um.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(testUser);
-            _cardManagementServiceMock.Setup(s => s.HandleCorrectAnswer(cardId, testUser.Id)).ReturnsAsync(true);
-
-            //act
-            var result = await _cardController.CorrectAnswer(cardId);
-
-            //assert
-            result.Should().BeOfType<OkResult>();
-        }
-
-        [Fact]
-        public async Task CorrectAnswer_ShouldReturnNoFound_WhenCardNotFound()
-        {
-            //arrange
-            var testUser = new AppUser
-            {
-                Id = Guid.NewGuid().ToString(),
-                Email = "test@gmail.com"
-            };
-            var cardId = 999;
-
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, testUser.Id)
-            }));
-
-            _cardController.ControllerContext = new ControllerContext
-            {
-                HttpContext = new DefaultHttpContext { User = user }
-            };
-
-            _userManagerMock.Setup(um => um.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(testUser);
-            _cardManagementServiceMock.Setup(s => s.HandleCorrectAnswer(cardId, testUser.Id)).ReturnsAsync(false);
-
-            //act
-            var result = await _cardController.CorrectAnswer(cardId);
-
-            //assert
-            result.Should().BeOfType<NotFoundResult>();
-        }
-
-        [Fact]
-        public async Task IncorrectAnswer_ShouldReturnOk_WhenAnswerAdded()
-        {
-            //arrange
-            var testUser = new AppUser
-            {
-                Id = Guid.NewGuid().ToString(),
-                Email = "test@gmail.com"
-            };
-            var cardId = 999;
-
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, testUser.Id)
-            }));
-
-            _cardController.ControllerContext = new ControllerContext
-            {
-                HttpContext = new DefaultHttpContext { User = user }
-            };
-
-            _userManagerMock.Setup(um => um.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(testUser);
-            _cardManagementServiceMock.Setup(s => s.HandleIncorrectAnswer(cardId, testUser.Id)).ReturnsAsync(true);
-
-            //act
-            var result = await _cardController.IncorrectAnswer(cardId);
-
-            //assert
-            result.Should().BeOfType<OkResult>();
-        }
-
-        [Fact]
-        public async Task IncorrectAnswer_ShouldReturnNoFound_WhenCardNotFound()
-        {
-            //arrange
-            var testUser = new AppUser
-            {
-                Id = Guid.NewGuid().ToString(),
-                Email = "test@gmail.com"
-            };
-            var cardId = 999;
-
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, testUser.Id)
-            }));
-
-            _cardController.ControllerContext = new ControllerContext
-            {
-                HttpContext = new DefaultHttpContext { User = user }
-            };
-
-            _userManagerMock.Setup(um => um.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(testUser);
-            _cardManagementServiceMock.Setup(s => s.HandleIncorrectAnswer(cardId, testUser.Id)).ReturnsAsync(false);
-
-            //act
-            var result = await _cardController.IncorrectAnswer(cardId);
 
             //assert
             result.Should().BeOfType<NotFoundResult>();
