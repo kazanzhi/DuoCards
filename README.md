@@ -1,15 +1,16 @@
 DuoCards - English Learning Application
 
 Overview
+
 DuoCards is an interactive web application designed to help users learn English using flashcards. Each card represents a word with its translation, and users can flip the card to reveal the meaning in English. The app supports animations, card flipping, and intuitive navigation for a fun and engaging learning experience.
 
 Technologies Used
 
 Frontend:
-React with TypeScript
-React Bootstrap for UI components
-Custom CSS for animations
-JavaScript animations and transitions for card interactions
+React with TypeScript;
+React Bootstrap for UI components;
+Custom CSS for animations;
+JavaScript animations and transitions for card interactions;
 
 Backend:
 C# with ASP.NET Core
