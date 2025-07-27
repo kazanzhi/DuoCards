@@ -13,21 +13,21 @@ Custom CSS for animations;
 JavaScript animations and transitions for card interactions;
 
 Backend:
-C# with ASP.NET Core
-Entity Framework Core
-Identity
-JWT (JSON Web Token)
-xUnit + Moq + FluentAssertions
-Hangfire (for background job scheduling)
-Unsplash API (word image fetching)
-Google Translate API (unofficial, word translation)
+C# with ASP.NET Core;
+Entity Framework Core;
+Identity;
+JWT (JSON Web Token);
+xUnit + Moq + FluentAssertions;
+Hangfire (for background job scheduling);
+Unsplash API (word image fetching);
+Google Translate API (unofficial, word translation);
 
 Tools:
-GitHub for version control
-Sourcetree for Git management
-Postman for API testing
-Visual Studio for backend development
-Visual Studio Code for frontend development
+GitHub for version control;
+Sourcetree for Git management;
+Postman for API testing;
+Visual Studio for backend development;
+Visual Studio Code for frontend development;
 
 Features
 
